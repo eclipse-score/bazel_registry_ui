@@ -29,8 +29,11 @@ jobs:
       - name: Run Prettier
         run: pnpm prettier --write .
 
-      - name: Build project
-        run: pnpm run build
+      - name: Build and export project
+        run: |
+          pnpm run build
+          pnpm run export
+          touch out/.nojekyll  # prevent GitHub Pages from ignoring _next folder
 
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v3
