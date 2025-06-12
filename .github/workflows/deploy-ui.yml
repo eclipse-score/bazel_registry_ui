@@ -28,7 +28,7 @@ jobs:
 
       - name: Checkout BCR submodule
         run: |
-          git submodule update --init -- data/bazel-central-registry
+          git submodule update --init --recursive --remote -- data/bazel-central-registry
 
       - name: Build the UI
         run: pnpm run build

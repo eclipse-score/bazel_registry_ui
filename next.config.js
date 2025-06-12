@@ -6,6 +6,6 @@ const nextConfig = {
   basePath: '/bcr-ui',
   assetPrefix: '/bcr-ui',
   staticPageGenerationTimeout: 600,
-}
+};
 
 module.exports = nextConfig;
