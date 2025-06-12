@@ -1,4 +1,4 @@
-name: Build & Deploy UI
+name: Build and Deploy UI to GitHub Pages
 
 on:
   push:
@@ -13,7 +13,7 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout repository with submodules
         uses: actions/checkout@v4
         with:
           submodules: 'recursive'
@@ -24,19 +24,18 @@ jobs:
           version: 8
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
-      - name: Checkout BCR submodule
-        run: |
-          git submodule update --init --recursive --remote -- data/bazel-central-registry
+      - name: Run Prettier
+        run: pnpm prettier --write .
 
-      - name: Build the UI
+      - name: Build project
         run: pnpm run build
 
-      - name: Deploy to gh-pages 🚀
+      - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./out
           publish_branch: gh-pages
-          commit_message: "Deploying to gh-pages from @ ${{ github.sha }} 🚀"
+          commit_message: "Deploying to gh-pages from @ ${{ github.sha }}"

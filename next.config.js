@@ -5,7 +5,7 @@ const nextConfig = {
   // 👇 Required for GitHub Pages under /bcr-ui
   basePath: '/bcr-ui',
   assetPrefix: '/bcr-ui',
-  staticPageGenerationTimeout: 600,
-};
+  staticPageGenerationTimeout: 600
+}
 
-module.exports = nextConfig;
+module.exports = nextConfig
