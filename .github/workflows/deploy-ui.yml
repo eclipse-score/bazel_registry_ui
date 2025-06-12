@@ -1,0 +1,36 @@
+name: Build & Deploy UI
+
+on:
+  push:
+    branches:
+      - Aymen-Soussi-01-update-ui-with-our-bazel-registry-modules
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build UI
+        run: pnpm run build
+
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./out  # or your actual output directory
+          publish_branch: gh-pages
+          commit_message: "Deploying to gh-pages from @ ${{ github.sha }} 🚀"
