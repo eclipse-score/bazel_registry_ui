@@ -13,8 +13,10 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
@@ -24,13 +26,17 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Build UI
+      - name: Checkout BCR submodule
+        run: |
+          git submodule update --init -- data/bazel-central-registry
+
+      - name: Build the UI
         run: pnpm run build
 
-      - name: Deploy to gh-pages
+      - name: Deploy to gh-pages 🚀
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./out  # or your actual output directory
+          publish_dir: ./out
           publish_branch: gh-pages
           commit_message: "Deploying to gh-pages from @ ${{ github.sha }} 🚀"
