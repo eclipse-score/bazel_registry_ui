@@ -2,7 +2,7 @@ name: Build and Deploy
 on:
   push:
     branches:
-      - 'main'
+      - 'Aymen-Soussi-01-update-ui-with-our-bazel-registry-modules'
   workflow_dispatch:
     inputs:
       bcrCommitHash:
