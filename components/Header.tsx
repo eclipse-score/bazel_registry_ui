@@ -27,7 +27,7 @@ export const Header: React.FC<HeaderProps> = () => {
         <div className="flex flex-1 items-center">
           <Link href="/" className="flex items-center cursor-pointer">
             <span className="self-center text-xl font-semibold whitespace-nowrap text-white cursor-pointer">
-              Eclipse S-CORE
+              Eclipse S-Core Bazel Registry
             </span>
           </Link>
         </div>

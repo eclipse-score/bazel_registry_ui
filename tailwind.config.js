@@ -8,7 +8,7 @@ module.exports = {
     extend: {
       colors: {
         'bzl-green': '#45ADA8',
-        'link-color': '#00AC5B',
+        'link-color': '#547980',
         'link-color-hover': '#007940',
       },
     },
