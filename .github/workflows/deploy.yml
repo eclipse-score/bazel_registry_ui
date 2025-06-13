@@ -19,7 +19,7 @@ on:
 permissions:
   # Required so we can deploy to the gh-pages branch
   contents: write
-  # To post the PR preview link as a comment 
+  # To post the PR preview link as a comment
   pull-requests: write
 jobs:
   build-and-deploy:
@@ -98,4 +98,4 @@ jobs:
         if: github.event_name != 'pull_request'
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-            folder: out
+          folder: out
