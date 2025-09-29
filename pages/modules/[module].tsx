@@ -20,6 +20,7 @@ import {
 import { GithubRepositoryMetadata } from '../../data/githubMetadata'
 import { formatDistance, parseISO } from 'date-fns'
 import { faGlobe, faScaleBalanced } from '@fortawesome/free-solid-svg-icons'
+import { StardocRenderer } from '../../components/Stardoc'
 
 interface ModulePageProps {
   metadata: Metadata
@@ -114,7 +115,7 @@ const ModulePage: NextPage<ModulePageProps> = ({
 
       <Header />
       <main>
-        <div className="max-w-4xl w-4xl mx-auto mt-8">
+        <div className="max-w-7xl w-7xl mx-auto mt-8">
           <div className="border rounded p-4 divide-y">
             <div className="flex items-center gap-1">
               {versionInfo.hasAttestationFile && (
@@ -366,34 +367,6 @@ const ModulePage: NextPage<ModulePageProps> = ({
                     )}
                   </details>
                 </div>
-                {versionInfo.binaryprotoFiles.length > 0 && (
-                  <div className="mt-4">
-                    <details>
-                      <summary>
-                        <span
-                          role="heading"
-                          aria-level={2}
-                          className="text-1xl mt-4"
-                        >
-                          <span className="font-bold">Documentation Files</span>{' '}
-                          ({versionInfo.binaryprotoFiles.length})
-                        </span>
-                      </summary>
-                      <ul className="mt-4">
-                        {versionInfo.binaryprotoFiles.map((file) => (
-                          <li
-                            key={file}
-                            className="border rounded p-2 mt-2 flex items-center gap-4"
-                          >
-                            <div className="font-mono text-sm text-gray-700">
-                              {file}
-                            </div>
-                          </li>
-                        ))}
-                      </ul>
-                    </details>
-                  </div>
-                )}
               </div>
               <div id="metadata" className="sm:pl-2 basis-8 md:basis-[12rem]">
                 <h2 className="text-2xl font-bold mt-4 mb-2">About</h2>
@@ -519,6 +492,23 @@ const ModulePage: NextPage<ModulePageProps> = ({
             </div>
           </div>
         </div>
+        {versionInfo.stardocs.length > 0 && (
+          <div className="max-w-7xl w-7xl mx-auto mt-8">
+            <div className="mt-6">
+              <h2 className="text-2xl font-bold mb-4">
+                Starlark API Documentation
+              </h2>
+              <div className="space-y-4">
+                {versionInfo.stardocs.map((stardoc, index) => (
+                  <StardocRenderer
+                    key={stardoc.file || index}
+                    stardoc={stardoc}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
       </main>
       <div className="flex-grow" />
       <Footer />
