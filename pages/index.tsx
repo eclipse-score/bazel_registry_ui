@@ -18,10 +18,10 @@ import { parseISO } from 'date-fns'
 // ]
 const HIGHLIGHTED_MODULES = [
   'bazel-gazelle',
+  'bazelrc-preset.bzl',
   'rules_go',
   'rules_oci',
   'rules_python',
-  'toolchains_llvm',
   'rules_foreign_cc',
   'rules_jvm_external',
   'rules_nodejs',
