@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGithub } from '@fortawesome/free-brands-svg-icons'
 import { faEnvelope, faStar } from '@fortawesome/free-regular-svg-icons'
 import { CopyCode } from '../../components/CopyCode'
-import { AttestationBadge } from '../../components/AttestationBadge'
+import { Badges } from '../../components/Badges'
 import { PlatformSupport } from '../../components/PlatformSupport'
 import { BazelVersionSupport } from '../../components/BazelVersionSupport'
 import React, { useEffect, useState } from 'react'
@@ -28,6 +28,7 @@ interface ModulePageProps {
   selectedVersion: string
   reverseDependencies: string[]
   githubMetadata: GithubRepositoryMetadata | null
+  deprecated: boolean
 }
 
 const GITHUB_API_USER_AGENT = 'Bazel Central Registry UI'
@@ -44,6 +45,7 @@ const ModulePage: NextPage<ModulePageProps> = ({
   selectedVersion,
   reverseDependencies,
   githubMetadata,
+  deprecated,
 }) => {
   const router = useRouter()
   const { module } = router.query
@@ -118,10 +120,15 @@ const ModulePage: NextPage<ModulePageProps> = ({
         <div className="max-w-7xl w-7xl mx-auto mt-8">
           <div className="border rounded p-4 divide-y">
             <div className="flex items-center gap-1">
-              {versionInfo.hasAttestationFile && (
+              {(versionInfo.hasAttestationFile ||
+                githubMetadata?.isArchived ||
+                deprecated) && (
                 <span className="w-7 h-7 inline-block">
-                  <AttestationBadge
-                    hasAttestationFile={true}
+                  <Badges
+                    hasAttestationFile={versionInfo.hasAttestationFile}
+                    isArchived={githubMetadata?.isArchived || false}
+                    deprecated={deprecated}
+                    deprecationMessage={metadata.deprecated}
                     placement="bottom-start"
                   />
                 </span>
@@ -169,71 +176,145 @@ const ModulePage: NextPage<ModulePageProps> = ({
                           key={version.version}
                           className="border rounded mt-2 "
                         >
-                          {version.isYanked && (
-                            <div
-                              key={`${version.version}-yanked`}
-                              className="p-2 mb-2 bg-amber-300"
-                            >
-                              <a
-                                href="https://bazel.build/external/module#yanked_versions"
-                                className="underline decoration-dashed decoration-gray-500 hover:decoration-black"
-                              >
-                                Version yanked
-                              </a>{' '}
-                              with comment: <p>{version.yankReason}</p>
+                          {version.isYanked ? (
+                            <div className="p-4 bg-yellow-50 border-2 border-yellow-400 rounded-3xl">
+                              <div className="flex items-start mb-4">
+                                <div className="flex-shrink-0">
+                                  <span className="text-yellow-500 text-xl">
+                                    🚫
+                                  </span>
+                                </div>
+                                <div className="ml-3">
+                                  <h3 className="text-sm font-medium text-yellow-800">
+                                    <a
+                                      href="https://bazel.build/external/module#yanked_versions"
+                                      className="underline decoration-dashed decoration-yellow-600 hover:decoration-yellow-800"
+                                    >
+                                      Version yanked
+                                    </a>
+                                  </h3>
+                                  <div className="mt-2 text-sm text-yellow-700">
+                                    {version.yankReason}
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="flex items-stretch gap-4">
+                                <div className="flex flex-1 justify-between">
+                                  <div className="flex p-2 flex-col gap-2 justify-between border-r hover:border-link-color hover:border-r-4">
+                                    <Link
+                                      href={`/modules/${module}/${version.version}`}
+                                    >
+                                      <div className="place-items-center hover:border-gray-800 flex items-center gap-2">
+                                        {version.version}
+                                        <Badges
+                                          hasAttestationFile={
+                                            version.hasAttestationFile
+                                          }
+                                          isArchived={
+                                            githubMetadata?.isArchived || false
+                                          }
+                                          deprecated={deprecated}
+                                          deprecationMessage={
+                                            metadata.deprecated
+                                          }
+                                        />
+                                      </div>
+                                    </Link>
+                                    <div className="self-end text-gray-500">
+                                      <a
+                                        href="https://bazel.build/external/module#compatibility_level"
+                                        className="underline decoration-dashed decoration-gray-500 hover:decoration-black"
+                                      >
+                                        compatibility level
+                                      </a>{' '}
+                                      {version.moduleInfo.compatibilityLevel}
+                                    </div>
+                                  </div>
+                                  <div className="flex p-2 justify-end">
+                                    <div className="flex flex-col justify-between items-end">
+                                      <a
+                                        href={`https://github.com/bazelbuild/bazel-central-registry/tree/main/modules/${module}/${version.version}`}
+                                        className="text-link-color hover:text-link-color-hover"
+                                      >
+                                        view registry source
+                                      </a>
+                                      <a
+                                        href={`https://github.com/bazelbuild/bazel-central-registry/commit/${version.submission.hash}`}
+                                        className="text-link-color hover:text-link-color-hover"
+                                        suppressHydrationWarning
+                                      >
+                                        published{' '}
+                                        {formatDistance(
+                                          parseISO(
+                                            version.submission.authorDateIso
+                                          ),
+                                          new Date(),
+                                          { addSuffix: true }
+                                        )}
+                                      </a>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="flex items-stretch gap-4">
+                              <div className="flex flex-1 justify-between">
+                                <div className="flex p-2 flex-col gap-2 justify-between border-r hover:border-link-color hover:border-r-4">
+                                  <Link
+                                    href={`/modules/${module}/${version.version}`}
+                                  >
+                                    <div className="place-items-center hover:border-gray-800 flex items-center gap-2">
+                                      {version.version}
+                                      <Badges
+                                        hasAttestationFile={
+                                          version.hasAttestationFile
+                                        }
+                                        isArchived={
+                                          githubMetadata?.isArchived || false
+                                        }
+                                        deprecated={deprecated}
+                                        deprecationMessage={metadata.deprecated}
+                                      />
+                                    </div>
+                                  </Link>
+                                  <div className="self-end text-gray-500">
+                                    <a
+                                      href="https://bazel.build/external/module#compatibility_level"
+                                      className="underline decoration-dashed decoration-gray-500 hover:decoration-black"
+                                    >
+                                      compatibility level
+                                    </a>{' '}
+                                    {version.moduleInfo.compatibilityLevel}
+                                  </div>
+                                </div>
+                                <div className="flex p-2 justify-end">
+                                  <div className="flex flex-col justify-between items-end">
+                                    <a
+                                      href={`https://github.com/bazelbuild/bazel-central-registry/tree/main/modules/${module}/${version.version}`}
+                                      className="text-link-color hover:text-link-color-hover"
+                                    >
+                                      view registry source
+                                    </a>
+                                    <a
+                                      href={`https://github.com/bazelbuild/bazel-central-registry/commit/${version.submission.hash}`}
+                                      className="text-link-color hover:text-link-color-hover"
+                                      suppressHydrationWarning
+                                    >
+                                      published{' '}
+                                      {formatDistance(
+                                        parseISO(
+                                          version.submission.authorDateIso
+                                        ),
+                                        new Date(),
+                                        { addSuffix: true }
+                                      )}
+                                    </a>
+                                  </div>
+                                </div>
+                              </div>
                             </div>
                           )}
-                          <div className="flex items-stretch gap-4">
-                            <div className="flex flex-1 justify-between">
-                              <div className="flex p-2 flex-col gap-2 justify-between border-r hover:border-link-color hover:border-r-4">
-                                <Link
-                                  href={`/modules/${module}/${version.version}`}
-                                >
-                                  <div className="place-items-center hover:border-gray-800 flex items-center gap-2">
-                                    {version.version}
-                                    <AttestationBadge
-                                      hasAttestationFile={
-                                        version.hasAttestationFile
-                                      }
-                                    />
-                                  </div>
-                                </Link>
-                                <div className="self-end text-gray-500">
-                                  <a
-                                    href="https://bazel.build/external/module#compatibility_level"
-                                    className="underline decoration-dashed decoration-gray-500 hover:decoration-black"
-                                  >
-                                    compatibility level
-                                  </a>{' '}
-                                  {version.moduleInfo.compatibilityLevel}
-                                </div>
-                              </div>
-                              <div className="flex p-2 justify-end">
-                                <div className="flex flex-col justify-between items-end">
-                                  <a
-                                    href={`https://github.com/bazelbuild/bazel-central-registry/tree/main/modules/${module}/${version.version}`}
-                                    className="text-link-color hover:text-link-color-hover"
-                                  >
-                                    view registry source
-                                  </a>
-                                  <a
-                                    href={`https://github.com/bazelbuild/bazel-central-registry/commit/${version.submission.hash}`}
-                                    className="text-link-color hover:text-link-color-hover"
-                                    suppressHydrationWarning
-                                  >
-                                    published{' '}
-                                    {formatDistance(
-                                      parseISO(
-                                        version.submission.authorDateIso
-                                      ),
-                                      new Date(),
-                                      { addSuffix: true }
-                                    )}
-                                  </a>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
                         </li>
                       </>
                     ))}
@@ -370,6 +451,41 @@ const ModulePage: NextPage<ModulePageProps> = ({
               </div>
               <div id="metadata" className="sm:pl-2 basis-8 md:basis-[12rem]">
                 <h2 className="text-2xl font-bold mt-4 mb-2">About</h2>
+                {deprecated && metadata.deprecated && (
+                  <div className="mb-4 p-4 bg-yellow-50 border-2 border-yellow-400 rounded-3xl">
+                    <div className="flex items-start">
+                      <div className="flex-shrink-0">
+                        <span className="text-yellow-500 text-xl">⚠️</span>
+                      </div>
+                      <div className="ml-3">
+                        <h3 className="text-sm font-medium text-yellow-800">
+                          This module is deprecated
+                        </h3>
+                        <div className="mt-2 text-sm text-yellow-700">
+                          {metadata.deprecated}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                {githubMetadata?.isArchived && (
+                  <div className="mb-4 p-4 bg-yellow-50 border-2 border-yellow-400 rounded-3xl">
+                    <div className="flex items-start">
+                      <div className="flex-shrink-0">
+                        <span className="text-yellow-500 text-xl">📦</span>
+                      </div>
+                      <div className="ml-3">
+                        <h3 className="text-sm font-medium text-yellow-800">
+                          This repository is archived
+                        </h3>
+                        <div className="mt-2 text-sm text-yellow-700">
+                          This module&apos;s repository is archived and no
+                          longer actively maintained.
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
                 <div>
                   {repoDescription && (
                     <div className="mb-2">
@@ -412,7 +528,8 @@ const ModulePage: NextPage<ModulePageProps> = ({
                           className="mr-1 min-w-[30px]"
                           icon={faStar}
                         />
-                        {repoStargazers} Stars
+                        {repoStargazers}{' '}
+                        {repoStargazers === 1 ? 'Star' : 'Stars'}
                       </div>
                     )}
 
