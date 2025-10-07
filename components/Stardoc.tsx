@@ -7,19 +7,10 @@ import { tomorrow } from 'react-syntax-highlighter/dist/cjs/styles/prism'
 import { StardocModuleInfo } from '../data/stardoc'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCopy, faCheck } from '@fortawesome/free-solid-svg-icons'
-import { AttributeType } from '@buf/bazel_bazel.bufbuild_es/src/main/java/com/google/devtools/build/skydoc/rendering/proto/stardoc_output_pb'
+import { AttributeType } from '@buf/bazel_bazel.bufbuild_es//stardoc_output/stardoc_output_pb'
 
-// port of https://github.com/bazelbuild/bazel/blob/09c621e4cf5b968f4c6cdf905ab142d5961f9ddc/src/main/java/com/google/devtools/build/skydoc/rendering/MarkdownUtil.java#L248-L282
+// port of https://github.com/bazelbuild/bazel/blob/5b68c32bceec9f1c510870310a6edf391b22c0d2/src/main/java/com/google/devtools/build/docgen/RuleDocumentationAttribute.java#L65
 function attributeTypeDescription(attributeType: number): string {
-  // special handling for types that are missing from the outdated @buf/bazel_bazel.bufbuild_es
-  // See also: https://github.com/bazel-contrib/bcr-ui/issues/207
-  if (attributeType == 14) {
-    return 'dictionary: String → Label'
-  }
-  if (attributeType == 15) {
-    return 'dictionary: String → list of labels'
-  }
-
   switch (AttributeType[attributeType]) {
     case 'NAME':
       return 'name'
@@ -47,6 +38,10 @@ function attributeTypeDescription(attributeType: number): string {
       return 'label'
     case 'OUTPUT_LIST':
       return 'list of labels'
+    case 'LABEL_DICT_UNARY':
+      return 'dictionary: Strings → Label'
+    case 'LABEL_LIST_DICT':
+      return 'dictionary: Strings → List of labels'
   }
   console.warn('Unknown stardoc_output proto attribute type:', attributeType)
   return 'unknown'
