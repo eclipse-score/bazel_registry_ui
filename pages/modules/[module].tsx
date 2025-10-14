@@ -19,8 +19,11 @@ import {
 } from '../../data/moduleStaticProps'
 import { GithubRepositoryMetadata } from '../../data/githubMetadata'
 import { formatDistance, parseISO } from 'date-fns'
-import { faGlobe, faScaleBalanced } from '@fortawesome/free-solid-svg-icons'
-import { StardocRenderer } from '../../components/Stardoc'
+import {
+  faBook,
+  faGlobe,
+  faScaleBalanced,
+} from '@fortawesome/free-solid-svg-icons'
 
 interface ModulePageProps {
   metadata: Metadata
@@ -564,7 +567,27 @@ const ModulePage: NextPage<ModulePageProps> = ({
                     )}
                   </div>
                 </div>
-
+                {versionInfo.stardocs.length > 0 && (
+                  <div className="mt-4">
+                    <h2 className="text-lg font-bold mt-4 mb-2">
+                      Documentation
+                    </h2>
+                    <div>
+                      <Link
+                        href={`/docs/${module}${
+                          selectedVersion ? `/${selectedVersion}` : ''
+                        }`}
+                        className="flex items-center text-sm text-link-color hover:text-link-color-hover transition-colors"
+                      >
+                        <FontAwesomeIcon
+                          icon={faBook}
+                          className="mr-1 min-w-[30px]"
+                        />
+                        View API Documentation
+                      </Link>
+                    </div>
+                  </div>
+                )}
                 <div className="mt-4">
                   <h2 className="text-2xl font-bold mt-4 mb-2">Tested on</h2>
                   <PlatformSupport
@@ -609,23 +632,6 @@ const ModulePage: NextPage<ModulePageProps> = ({
             </div>
           </div>
         </div>
-        {versionInfo.stardocs.length > 0 && (
-          <div className="max-w-7xl w-7xl mx-auto mt-8">
-            <div className="mt-6">
-              <h2 className="text-2xl font-bold mb-4">
-                Starlark API Documentation
-              </h2>
-              <div className="space-y-4">
-                {versionInfo.stardocs.map((stardoc, index) => (
-                  <StardocRenderer
-                    key={stardoc.file || index}
-                    stardoc={stardoc}
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
       </main>
       <div className="flex-grow" />
       <Footer />

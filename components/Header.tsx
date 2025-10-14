@@ -107,6 +107,7 @@ export const Header: React.FC<HeaderProps> = ({
               <span className="self-center text-2xl font-normal whitespace-nowrap text-white cursor-pointer pl-2">
                 Eclipse S-CORE Bazel Registry
               </span>
+              </span>
             </Link>
           </div>
           <div className="hidden lg:flex items-center w-full md:flex md:w-auto md:order-2">

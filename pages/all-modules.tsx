@@ -24,7 +24,6 @@ const Search: NextPage<SearchPageProps> = ({ searchIndex }) => {
         <title>Eclipse S-CORE Bazel Modules Registry</title>
         <link rel="icon" href="/favicon.png" />
       </Head>
-
       <Header />
       <main className="m-4 l:m-0">
         <div className="max-w-4xl w-4xl mx-auto mt-8 flex flex-col items-center">
