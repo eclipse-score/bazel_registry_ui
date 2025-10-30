@@ -89,6 +89,7 @@ const Search: NextPage<SearchPageProps> = ({ searchIndex }) => {
                     hasAttestationFile,
                     hasStardocs,
                     isArchived,
+                    hasFundingLinks,
                     deprecated,
                     deprecationMessage,
                   }) => (
@@ -100,6 +101,7 @@ const Search: NextPage<SearchPageProps> = ({ searchIndex }) => {
                         hasAttestationFile,
                         hasStardocs,
                         isArchived,
+                        hasFundingLinks,
                         deprecated,
                         deprecationMessage,
                       }}
