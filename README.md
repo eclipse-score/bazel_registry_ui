@@ -3,6 +3,11 @@
 This repository provides a web UI for the [Eclipse S‑CORE Bazel Modules Registry](https://github.com/eclipse-score/bazel_registry).
 It entirely consists of statically rendered pages, which are updated as soon as a new commit is pushed to the registry.
 
+## Maintenance and Support
+
+This repo is funded by contributions to our [OpenCollective](https://opencollective.com/bazel-rules-authors-sig/projects/bazel-central-registry).
+Maintenance is performed on a best-effort basis by volunteers in the Bazel community.
+
 ## Contributing
 
 We are happy about any contributions!
