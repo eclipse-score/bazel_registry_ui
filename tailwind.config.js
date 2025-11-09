@@ -6,9 +6,6 @@ module.exports = {
   ],
   theme: {
     extend: {
-      fontFamily: {
-        playwrite: ['Playwrite US Modern', 'sans-serif'],
-      },
       colors: {
         'bzl-green': '#45ADA8',
         'bzl-green-dark': '#004300',
