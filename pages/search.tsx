@@ -59,13 +59,13 @@ const Search: NextPage<SearchPageProps> = ({ searchIndex }) => {
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col min-h-screen">
       <Head>
         <title>Eclipse S‑CORE Bazel Modules Registry</title>
         <link rel="icon" href="/favicon.png" />
       </Head>
       <Header />
-      <main className="m-4 l:m-0">
+      <main className="m-4 l:m-0 flex-1">
         <div className="max-w-4xl w-4xl mx-auto mt-8 flex flex-col items-center">
           <form onSubmit={handleSubmitSearch} className="contents">
             <input
@@ -79,7 +79,15 @@ const Search: NextPage<SearchPageProps> = ({ searchIndex }) => {
             />
           </form>
           <div className="w-full max-w-4xl">
-            <h2 className="font-bold text-lg">Search results</h2>
+            <h2 className="font-bold text-lg">
+              Search results
+              {getSearchQuery() && searchResults && (
+                <span className="text-gray-600 font-normal ml-2">
+                  ({searchResults.length}{' '}
+                  {searchResults.length === 1 ? 'module' : 'modules'})
+                </span>
+              )}
+            </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-4">
               {searchResults && searchResults.length ? (
                 searchResults.map(
@@ -112,7 +120,8 @@ const Search: NextPage<SearchPageProps> = ({ searchIndex }) => {
                 <div className="text-gray-600">
                   <p>
                     No results for &quot;
-                    <span className="text-black">{router.query.q}</span>&quot;.
+                    <span className="text-black">{router.query.q}</span>&quot;
+                    (0 modules).
                   </p>
                   <p>
                     You can{' '}
