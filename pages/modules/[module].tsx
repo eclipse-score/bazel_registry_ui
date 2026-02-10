@@ -24,7 +24,7 @@ interface ModulePageProps {
   reverseDependencies: string[]
 }
 
-const GITHUB_API_USER_AGENT = 'Bazel Central Registry UI'
+const GITHUB_API_USER_AGENT = 'Eclipse S-CORE Bazel Modules Registry UI'
 const GITHUB_API_VERSION = '2022-11-28'
 
 // The number of versions that should be displayed on initial page-load (before clicking "show all").
@@ -98,7 +98,7 @@ const ModulePage: NextPage<ModulePageProps> = ({
   return (
     <div className="flex flex-col">
       <Head>
-        <title>{`Bazel Central Registry | ${module}`}</title>
+        <title>{`Eclipse S-CORE Bazel Modules Registry | ${module}`}</title>
         <link rel="icon" href="/favicon.png" />
       </Head>
 
@@ -502,7 +502,7 @@ const useDetectReleaseFormatViaGithubApi = (
           method: 'GET',
           headers: {
             Accept: 'application/vnd.github+json',
-            'User-Agent': 'Bazel Central Registry UI',
+            'User-Agent': GITHUB_API_USER_AGENT,
             'X-GitHub-Api-Version': '2022-11-28',
           },
         }
