@@ -21,7 +21,7 @@ const Search: NextPage<SearchPageProps> = ({ searchIndex }) => {
   return (
     <div className="flex flex-col">
       <Head>
-        <title>Bazel Central Registry</title>
+        <title>Eclipse S-CORE Bazel Modules Registry</title>
         <link rel="icon" href="/favicon.png" />
       </Head>
 
