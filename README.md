@@ -51,6 +51,17 @@ Open <http://localhost:3000/bazel_registry_ui> with your browser to see the resu
 
 You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
 
+### S-CORE Registry Compatibility Notes
+
+Our registry deviates from the upstream BCR in a few practical ways. The UI includes guards for these cases:
+
+- Some modules have an empty `metadata.versions` array, so module/docs pages and the search index skip them and return `notFound`.
+- Registry links point to `eclipse-score/bazel_registry` instead of the upstream `bazelbuild/bazel-central-registry`.
+- The registry submodule may be shallow in CI; the deploy workflow unshallows it and the build tolerates missing git history for `authorDate`.
+- GitHub metadata artifacts are optional; deploy skips the download if the artifact does not exist.
+- Version lists are sometimes oldest-first, so the UI sorts versions before choosing the latest.
+- Bazel outputs can include generated TypeScript that is not in `node_modules`, so `tsconfig.json` excludes Bazel output dirs from type checking.
+
 ### Learn More about Next.js
 
 The page is built on top of Next.js.
