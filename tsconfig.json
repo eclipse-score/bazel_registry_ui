@@ -16,5 +16,12 @@
     "incremental": true
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules", "bazel-bcr-ui"]
+  "exclude": [
+    "node_modules",
+    "bazel-bcr-ui",
+    "bazel-bazel_registry_ui",
+    "bazel-bin",
+    "bazel-out",
+    "bazel-testlogs"
+  ]
 }
