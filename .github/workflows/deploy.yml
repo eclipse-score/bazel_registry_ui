@@ -19,6 +19,8 @@ on:
 permissions:
   # Required so we can deploy to the gh-pages branch
   contents: write
+  # Required to list and download artifacts from other workflows
+  actions: read
   # To post the PR preview link as a comment
   pull-requests: write
 jobs:
@@ -69,9 +71,15 @@ jobs:
             --branch main \
             --json databaseId,status,conclusion \
             --jq 'map(select(.status=="completed" and .conclusion=="success")) | first | .databaseId')
+          if [ -z "$run_id" ] || [ "$run_id" = "null" ]; then
+            echo "No successful fetch_repo_metadata run found; skipping download."
+            echo "run_id=" >> $GITHUB_OUTPUT
+            exit 0
+          fi
           echo "run_id=$run_id" >> $GITHUB_OUTPUT
 
       - name: Download and extract metadata artifact
+        if: ${{ steps.find-run.outputs.run_id != '' }}
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
