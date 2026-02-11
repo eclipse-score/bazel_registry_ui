@@ -3,6 +3,7 @@ on:
     types: [on-bcr-trigger]
 permissions:
   contents: write
+  pull-requests: write
 jobs:
   deploy:
     uses: ./.github/workflows/deploy.yml
