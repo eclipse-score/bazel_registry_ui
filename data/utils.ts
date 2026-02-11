@@ -118,6 +118,16 @@ const getSubmissionCommitOfVersionInternal = async (
   const commits = await gitlogPromise(options)
 
   const commitInfo = commits[commits.length - 1] as any
+  if (!commitInfo || !commitInfo.authorDate) {
+    const fallbackDate = new Date()
+    const authorDateIso = formatISO(fallbackDate)
+    return {
+      hash: commitInfo?.hash || 'unknown',
+      authorDate: commitInfo?.authorDate || authorDateIso,
+      authorDateRel: commitInfo?.authorDateRel || '',
+      authorDateIso,
+    }
+  }
   const authorDateIso = formatISO(
     parse(commitInfo.authorDate, 'yyyy-MM-dd HH:mm:ss xxxx', new Date())
   )
