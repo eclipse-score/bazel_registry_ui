@@ -101,12 +101,22 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 export async function getStaticPaths() {
   // For now, we'll use the same module list as the main module pages
   // In the future, we might want to filter this to only modules that have documentation
-  const { listModuleNames } = await import('../../data/utils')
+  const { getModuleMetadata, listModuleNames } = await import(
+    '../../data/utils'
+  )
   const modulesNames = await listModuleNames()
+  const modulesWithVersions = (
+    await Promise.all(
+      modulesNames.map(async (name) => {
+        const metadata = await getModuleMetadata(name)
+        return metadata.versions?.length ? name : null
+      })
+    )
+  ).filter((name): name is string => name !== null)
 
   // Next.js would write the static props snapshot for a "modules/boost" dynamic route to "boost.json"
   // but there is also a BCR module of that name. So skip build-time pre-rendering of the boost module.
-  const paths = modulesNames
+  const paths = modulesWithVersions
     .filter((name) => name != 'boost')
     .map((name) => ({
       params: { module: name },

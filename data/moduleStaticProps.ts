@@ -34,6 +34,9 @@ export const getStaticPropsModulePage = async (
   const metadata = await getModuleMetadata(module)
   let { versions } = metadata
   versions = sortVersions(versions)
+  if (versions.length === 0) {
+    return { notFound: true }
+  }
   let yankedVersions = metadata.yanked_versions || {}
 
   const versionInfos: VersionInfo[] = await Promise.all(

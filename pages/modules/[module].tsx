@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { Header, USER_GUIDE_LINK } from '../../components/Header'
 import { Footer } from '../../components/Footer'
-import { listModuleNames, Metadata } from '../../data/utils'
+import { getModuleMetadata, listModuleNames, Metadata } from '../../data/utils'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGithub } from '@fortawesome/free-brands-svg-icons'
 import {
@@ -675,10 +675,18 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
 export async function getStaticPaths() {
   const modulesNames = await listModuleNames()
+  const modulesWithVersions = (
+    await Promise.all(
+      modulesNames.map(async (name) => {
+        const metadata = await getModuleMetadata(name)
+        return metadata.versions?.length ? name : null
+      })
+    )
+  ).filter((name): name is string => name !== null)
 
   // Next.js would write the static props snapshot for a "modules/boost" dynamic route to "boost.json"
   // but there is also a BCR module of that name. So skip build-time pre-rendering of the boost module.
-  const paths = modulesNames
+  const paths = modulesWithVersions
     .filter((name) => name != 'boost')
     .map((name) => ({
       params: { module: name },
