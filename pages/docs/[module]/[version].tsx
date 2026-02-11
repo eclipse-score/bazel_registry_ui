@@ -6,7 +6,7 @@ import { getStaticPropsModulePage } from '../../../data/moduleStaticProps'
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { module, version } = params as any
 
-  return await getStaticPropsModulePage(module, version)
+  return (await getStaticPropsModulePage(module, version)) as any
 }
 
 export async function getStaticPaths() {

@@ -670,7 +670,7 @@ const ModulePage: NextPage<ModulePageProps> = ({
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { module } = params as any
 
-  return await getStaticPropsModulePage(module, null)
+  return (await getStaticPropsModulePage(module, null)) as any
 }
 
 export async function getStaticPaths() {
