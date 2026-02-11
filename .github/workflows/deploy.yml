@@ -49,6 +49,13 @@ jobs:
         run: |
           git submodule update --init -- data/bazel-central-registry
 
+      - name: Unshallow BCR submodule (if needed)
+        working-directory: data/bazel-central-registry
+        run: |
+          if [ "$(git rev-parse --is-shallow-repository)" = "true" ]; then
+            git fetch --unshallow
+          fi
+
       - name: Checkout latest commit of BCR submodule
         if:  ${{ !inputs.bcrCommitHash }}
         working-directory: data/bazel-central-registry
