@@ -36,7 +36,8 @@ export const listModuleNames = async (): Promise<string[]> => {
 
 export const listModuleVersions = async (module: string): Promise<string[]> => {
   const metadata = await getModuleMetadata(module)
-  return metadata.versions
+  const versions = Array.isArray(metadata.versions) ? metadata.versions : []
+  return sortVersions(versions)
 }
 
 export const getModuleMetadataInner = async (
@@ -70,13 +71,13 @@ export const buildSearchIndex = async (): Promise<SearchIndexEntry[]> => {
       try {
         const metadata = await getModuleMetadata(module)
         const versions = Array.isArray(metadata.versions)
-          ? metadata.versions
+          ? sortVersions(metadata.versions)
           : []
         if (versions.length === 0) {
           console.warn(`Skipping module without versions: ${module}`)
           return null
         }
-        const latestVersion = versions[versions.length - 1]
+        const latestVersion = versions[0]
 
         const { authorDateIso } = await getSubmissionCommitOfVersion(
           module,
@@ -110,6 +111,79 @@ export const buildSearchIndex = async (): Promise<SearchIndexEntry[]> => {
   return entries.filter(
     (entry): entry is SearchIndexEntry => entry !== null
   )
+}
+
+/**
+ * Parse and sort versions according to https://bazel.build/external/module#version_format.
+ *
+ * This is a placeholder until we switch to a common "Bzlmod semver" library
+ * (see https://github.com/bazel-contrib/bcr-ui/issues/54#issuecomment-1521844089).
+ */
+type Version = {
+  release: string[]
+  prerelease: string[]
+  original: string
+}
+
+type Cmp<T> = (a: T, b: T) => number
+
+function natural<T>(a: T, b: T): number {
+  return a < b ? -1 : a > b ? 1 : 0
+}
+
+function comparing<T, U>(f: (t: T) => U, innerCmp: Cmp<U> = natural): Cmp<T> {
+  return (a: T, b: T): number => innerCmp(f(a), f(b))
+}
+
+function lexicographically<T>(elementCmp: Cmp<T> = natural): Cmp<T[]> {
+  return (as: T[], bs: T[]): number => {
+    for (let i = 0; i < as.length && i < bs.length; i++) {
+      const result = elementCmp(as[i], bs[i])
+      if (result !== 0) return result
+    }
+    return as.length - bs.length
+  }
+}
+
+function composeCmps<T>(...cmps: Cmp<T>[]): Cmp<T> {
+  return (a: T, b: T): number => {
+    for (const cmp of cmps) {
+      const result = cmp(a, b)
+      if (result !== 0) return result
+    }
+    return 0
+  }
+}
+
+const compareIdentifiers: Cmp<string> = composeCmps(
+  comparing((id) => !/^\d+$/.test(id)), // pure numbers compare less than non-numbers
+  comparing((id) => (/^\d+$/.test(id) ? parseInt(id) : 0)),
+  natural
+)
+
+const compareVersions: Cmp<Version> = composeCmps(
+  comparing((v) => v.release, lexicographically(compareIdentifiers)),
+  comparing((v) => v.prerelease.length === 0), // nonempty prerelease compares less than empty prerelease
+  comparing((v) => v.prerelease, lexicographically(compareIdentifiers))
+)
+
+const parseVersion = (v: string): Version => {
+  const firstDash = v.indexOf('-')
+  if (firstDash === -1) {
+    return { release: v.split('.'), prerelease: [], original: v }
+  }
+  return {
+    release: v.slice(0, firstDash).split('.'),
+    prerelease: v.slice(firstDash + 1).split('.'),
+    original: v,
+  }
+}
+
+export function sortVersions(versions: string[]): string[] {
+  const parsed = versions.map(parseVersion)
+  parsed.sort(compareVersions)
+  parsed.reverse()
+  return parsed.map((v) => v.original)
 }
 
 export interface Commit {
