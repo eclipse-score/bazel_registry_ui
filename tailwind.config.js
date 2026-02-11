@@ -7,12 +7,12 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'bzl-green': '#00701a',
+        'bzl-green': '#45ADA8',
         'bzl-green-dark': '#004300',
         'bzl-green-med': '#43a047',
         'bzl-green-light': '#77d175',
-        'link-color': '#004300',
-        'link-color-hover': '#43a046',
+        'link-color': '#547980',
+        'link-color-hover': '#007940',
       },
     },
   },

@@ -106,7 +106,7 @@ export const Header: React.FC<HeaderProps> = ({
               </svg>
 
               <span className="self-center text-2xl font-normal whitespace-nowrap text-white cursor-pointer pl-2">
-                Bazel Central Registry
+                Eclipse S-CORE Bazel Registry
               </span>
             </Link>
           </div>

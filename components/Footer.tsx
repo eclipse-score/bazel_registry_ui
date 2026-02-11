@@ -3,18 +3,15 @@ import React from 'react'
 interface FooterProps {}
 
 export const REPORT_LINK =
-  'https://github.com/bazelbuild/bazel-central-registry/tree/main/docs#requesting-to-take-down-a-module'
-export const BCR_UI_REPO_LINK = 'https://github.com/bazel-contrib/bcr-ui'
-export const SIG_LINK = 'https://bazel-contrib.github.io/SIG-rules-authors/'
+  'https://github.com/eclipse-score/bazel_registry/issues'
+export const BCR_UI_REPO_LINK = 'https://github.com/eclipse-score/bazel_registry_ui'
 
 export const Footer: React.FC<FooterProps> = () => {
   return (
     <footer className="flex flex-col bg-bzl-green-dark text-white items-center justify-center gap-2 h-18 p-4 bottom-2">
       <div className="text-center">
-        The Bazel Central Registry is maintained by the Bazel team and the{' '}
-        <a href={SIG_LINK} className="underline hover:text-gray-200">
-          Bazel Rules authors SIG.
-        </a>
+        The Eclipse S-Core Bazel Registry is maintained by the Eclipse S-Core
+        team.
       </div>
       <div className="text-center">
         To report an issue with one of the modules, see the{' '}
