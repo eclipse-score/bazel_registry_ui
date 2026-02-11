@@ -74,12 +74,16 @@ jobs:
           echo "run_id=$run_id" >> $GITHUB_OUTPUT
 
       - name: Download and extract metadata artifact
+        if: steps.find-run.outputs.run_id != ''
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh run download ${{ steps.find-run.outputs.run_id }} \
+          mkdir -p data/github_metadata
+          if ! gh run download ${{ steps.find-run.outputs.run_id }} \
             --name github_metadata \
-            --dir data/github_metadata
+            --dir data/github_metadata; then
+            echo "No github_metadata artifact found; continuing without it."
+          fi
 
       - name: Build 🔧 # Outputs the result to the 'out' folder.
         run: pnpm run build
