@@ -67,38 +67,43 @@ export const buildSearchIndex = async (): Promise<SearchIndexEntry[]> => {
   const moduleNames = await listModuleNames()
   const entries = await Promise.all(
     moduleNames.map(async (module) => {
-      const metadata = await getModuleMetadata(module)
-      const versions = Array.isArray(metadata.versions)
-        ? metadata.versions
-        : []
-      if (versions.length === 0) {
-        console.warn(`Skipping module without versions: ${module}`)
+      try {
+        const metadata = await getModuleMetadata(module)
+        const versions = Array.isArray(metadata.versions)
+          ? metadata.versions
+          : []
+        if (versions.length === 0) {
+          console.warn(`Skipping module without versions: ${module}`)
+          return null
+        }
+        const latestVersion = versions[versions.length - 1]
+
+        const { authorDateIso } = await getSubmissionCommitOfVersion(
+          module,
+          latestVersion
+        )
+
+        // Get GitHub metadata to check if repository is archived
+        const githubMetadata = await getGithubRepositoryMetadata(module)
+
+        // Check if module has stardocs (just check if docs_url exists, don't fetch docs)
+        const sourceJson = await getSourceJson(module, latestVersion)
+        const hasStardocs = !!sourceJson?.docs_url
+
+        return {
+          module,
+          version: latestVersion,
+          authorDateIso,
+          hasAttestationFile: await hasAttestationFile(module, latestVersion),
+          hasStardocs,
+          hasFundingLinks: (githubMetadata?.fundingLinks?.length ?? 0) > 0,
+          isArchived: githubMetadata?.isArchived || false,
+          deprecated: !!metadata.deprecated,
+          deprecationMessage: metadata.deprecated || null,
+        }
+      } catch (error) {
+        console.warn(`Skipping module due to error: ${module}`, error)
         return null
-      }
-      const latestVersion = versions[versions.length - 1]
-
-      const { authorDateIso } = await getSubmissionCommitOfVersion(
-        module,
-        latestVersion
-      )
-
-      // Get GitHub metadata to check if repository is archived
-      const githubMetadata = await getGithubRepositoryMetadata(module)
-
-      // Check if module has stardocs (just check if docs_url exists, don't fetch docs)
-      const sourceJson = await getSourceJson(module, latestVersion)
-      const hasStardocs = !!sourceJson?.docs_url
-
-      return {
-        module,
-        version: latestVersion,
-        authorDateIso,
-        hasAttestationFile: await hasAttestationFile(module, latestVersion),
-        hasStardocs,
-        hasFundingLinks: (githubMetadata?.fundingLinks?.length ?? 0) > 0,
-        isArchived: githubMetadata?.isArchived || false,
-        deprecated: !!metadata.deprecated,
-        deprecationMessage: metadata.deprecated || null,
       }
     })
   )
