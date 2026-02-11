@@ -4,7 +4,8 @@ interface FooterProps {}
 
 export const REPORT_LINK =
   'https://github.com/eclipse-score/bazel_registry/issues'
-export const BCR_UI_REPO_LINK = 'https://github.com/eclipse-score/bazel_registry_ui'
+export const BCR_UI_REPO_LINK =
+  'https://github.com/eclipse-score/bazel_registry_ui'
 
 export const Footer: React.FC<FooterProps> = () => {
   return (
