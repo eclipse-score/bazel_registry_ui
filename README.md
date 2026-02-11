@@ -1,7 +1,7 @@
 # Eclipse S-CORE Bazel Registry Modules Web UI
 
 This repository provides a web UI for the [Eclipse S-CORE Bazel Modules Registry](https://github.com/eclipse-score/bazel_registry).
-It entirely consists of statically rendered pages, which are updated as soon as a new commit is pushed to the BCR.
+It entirely consists of statically rendered pages, which are updated as soon as a new commit is pushed to the registry.
 
 ## Maintenance and Support
 
@@ -12,7 +12,7 @@ Maintenance is performed on a best-effort basis by volunteers in the Bazel commu
 
 We are happy about any contributions!
 
-To get started you can take a look at our [Github issues](https://github.com/bazel-contrib/bcr-ui/issues).
+To get started you can take a look at our [Github issues](https://github.com/eclipse-score/bazel_registry_ui/issues).
 
 Unless you explicitly state otherwise, any contribution intentionally
 submitted for inclusion in the work by you, as defined in the Apache-2.0
@@ -24,10 +24,10 @@ conditions.
 Note that the git repo is enormous, due to the regularly published files in the `gh-pages` branch. To avoid downloading tens of gigabytes of data, use a shallow clone:
 
 ```bash
-git clone --depth 5 https://github.com/bazel-contrib/bcr-ui
+git clone --depth 5 https://github.com/eclipse-score/bazel_registry_ui
 ```
 
-We use git submodules to include the data from bazelbuild/bazel-central-registry, so after cloning this repo you need to run:
+We use git submodules to include the data from eclipse-score/bazel_registry, so after cloning this repo you need to run:
 
 ```bash
 git submodule update --init
@@ -47,7 +47,7 @@ Then, run the development server:
 npm run dev
 ```
 
-Open <http://localhost:3000/bazel-central-registry> with your browser to see the result.
+Open <http://localhost:3000/bazel_registry_ui> with your browser to see the result.
 
 You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
 
