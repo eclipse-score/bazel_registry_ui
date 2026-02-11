@@ -65,10 +65,17 @@ export interface SearchIndexEntry {
 
 export const buildSearchIndex = async (): Promise<SearchIndexEntry[]> => {
   const moduleNames = await listModuleNames()
-  return Promise.all(
+  const entries = await Promise.all(
     moduleNames.map(async (module) => {
       const metadata = await getModuleMetadata(module)
-      const latestVersion = metadata.versions[metadata.versions.length - 1]
+      const versions = Array.isArray(metadata.versions)
+        ? metadata.versions
+        : []
+      if (versions.length === 0) {
+        console.warn(`Skipping module without versions: ${module}`)
+        return null
+      }
+      const latestVersion = versions[versions.length - 1]
 
       const { authorDateIso } = await getSubmissionCommitOfVersion(
         module,
@@ -94,6 +101,9 @@ export const buildSearchIndex = async (): Promise<SearchIndexEntry[]> => {
         deprecationMessage: metadata.deprecated || null,
       }
     })
+  )
+  return entries.filter(
+    (entry): entry is SearchIndexEntry => entry !== null
   )
 }
 
@@ -504,6 +514,9 @@ export const getSourceJson = async (
   module: string,
   version: string
 ): Promise<SourceJson | null> => {
+  if (!module || !version) {
+    return null
+  }
   const sourceJsonPath = path.join(
     MODULES_ROOT_DIR,
     module,
