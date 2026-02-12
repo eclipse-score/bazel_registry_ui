@@ -44,67 +44,13 @@ export const Header: React.FC<HeaderProps> = ({
         <div className="container flex flex-wrap justify-evenly gap-4 flex-col sm:flex-row items-center mx-auto">
           <div className="flex items-center gap-3">
             <Link href="/" className="flex items-center cursor-pointer">
-              <svg version="1.1" height="25px" width="25px" viewBox="0 0 87 86">
-                <defs>
-                  <style>
-                    {`.st0{fill:none;stroke:#ffffff;stroke-width:3;stroke-linejoin:round;stroke-miterlimit:10;}
-                  .st1{opacity:0.2;fill:none;stroke:#ffffff;stroke-width:2;stroke-linejoin:round;stroke-miterlimit:10;}
-                  .st2{fill:#ffffff;`}
-                  </style>
-                </defs>
-                <rect
-                  x="39"
-                  y="2.8"
-                  transform="matrix(-0.7071 -0.7071 0.7071 -0.7071 69.033 94.234)"
-                  className="st0"
-                  width="30"
-                  height="60"
-                />
-                <rect
-                  x="17.8"
-                  y="2.8"
-                  transform="matrix(-0.7071 0.7071 -0.7071 -0.7071 79.234 32.8198)"
-                  className="st0"
-                  width="30"
-                  height="60"
-                />
-                <rect
-                  x="39"
-                  y="23.6"
-                  transform="matrix(-0.7071 -0.7071 0.7071 -0.7071 54.3112 129.7757)"
-                  className="st1"
-                  width="30"
-                  height="60"
-                />
-                <rect
-                  x="17.8"
-                  y="23.6"
-                  transform="matrix(-0.7071 0.7071 -0.7071 -0.7071 93.9558 68.3614)"
-                  className="st1"
-                  width="30"
-                  height="60"
-                />
-                <polygon
-                  className="st0"
-                  points="1,22.2 1,43 22.2,64.2 22.2,43.4 "
-                />
-                <polygon
-                  className="st0"
-                  points="43.4,64.6 43.4,85.5 22.2,64.2 22.2,43.4 "
-                />
-                <polygon
-                  className="st0"
-                  points="85.9,22.2 85.9,43 64.6,64.2 64.6,43.4 "
-                />
-                <polygon
-                  className="st0"
-                  points="43.4,64.6 64.6,43.4 64.6,64.2 43.4,85.5 "
-                />
-                <line className="st1" x1="22.2" y1="1" x2="22.2" y2="21.8" />
-                <line className="st1" x1="64.6" y1="1" x2="64.6" y2="21.8" />
-                <line className="st1" x1="43.4" y1="22.1" x2="43.4" y2="43.1" />
-              </svg>
-
+              <img
+                src="/images/eclipse-score-logo.svg"
+                alt="Eclipse S-CORE logo"
+                className="h-6 w-6"
+                width={24}
+                height={24}
+              />
               <span className="self-center text-2xl font-normal whitespace-nowrap text-white cursor-pointer pl-2">
                 Eclipse S-CORE Bazel Registry
               </span>

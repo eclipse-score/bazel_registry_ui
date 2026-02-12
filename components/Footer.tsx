@@ -9,7 +9,7 @@ export const BCR_UI_REPO_LINK =
 
 export const Footer: React.FC<FooterProps> = () => {
   return (
-    <footer className="flex flex-col bg-bzl-green-dark text-white items-center justify-center gap-2 h-18 p-4 bottom-2">
+    <footer className="flex flex-col bg-bzl-green text-white items-center justify-center gap-2 h-18 p-4 bottom-2">
       <div className="text-center">
         The Eclipse S-Core Bazel Registry is maintained by the Eclipse S-Core
         team.
