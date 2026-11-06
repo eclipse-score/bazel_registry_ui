@@ -8,7 +8,7 @@ on:
   
 jobs:
   fetch_repo_metadata:  
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
         - uses: actions/checkout@v5
           # Note, in this case we only need the latest commit, so it's okay with does a depth=1
